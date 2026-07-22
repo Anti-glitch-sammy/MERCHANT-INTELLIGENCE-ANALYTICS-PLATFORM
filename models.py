@@ -2,13 +2,11 @@ from typing import Optional
 import datetime
 import enum
 
-from sqlalchemy import DateTime, Enum, Float, ForeignKeyConstraint, Index, String, TIMESTAMP, text
+from sqlalchemy import DateTime, Enum, Float, ForeignKeyConstraint, Index, String, TIMESTAMP, Text, text
 from sqlalchemy.dialects.mysql import INTEGER, LONGTEXT, TINYINT
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-class Base(DeclarativeBase):
-    pass
-
+from database import Base
 
 class BalesStatus(str, enum.Enum):
     OPEN = 'OPEN'
@@ -167,6 +165,52 @@ class Products(Base):
     originalPrice: Mapped[Optional[float]] = mapped_column(Float, comment="Supplier's original price before markup — used for margin/cost tracking.")
 
     bales: Mapped[list['Bales']] = relationship('Bales', back_populates='products')
+
+
+class Suppliers(Base):
+    __tablename__ = 'suppliers'
+    __table_args__ = (
+        Index('clubCode', 'clubCode', unique=True),
+        Index('clubCode_10', 'clubCode', unique=True),
+        Index('clubCode_11', 'clubCode', unique=True),
+        Index('clubCode_12', 'clubCode', unique=True),
+        Index('clubCode_13', 'clubCode', unique=True),
+        Index('clubCode_14', 'clubCode', unique=True),
+        Index('clubCode_15', 'clubCode', unique=True),
+        Index('clubCode_16', 'clubCode', unique=True),
+        Index('clubCode_17', 'clubCode', unique=True),
+        Index('clubCode_18', 'clubCode', unique=True),
+        Index('clubCode_19', 'clubCode', unique=True),
+        Index('clubCode_2', 'clubCode', unique=True),
+        Index('clubCode_20', 'clubCode', unique=True),
+        Index('clubCode_3', 'clubCode', unique=True),
+        Index('clubCode_4', 'clubCode', unique=True),
+        Index('clubCode_5', 'clubCode', unique=True),
+        Index('clubCode_6', 'clubCode', unique=True),
+        Index('clubCode_7', 'clubCode', unique=True),
+        Index('clubCode_8', 'clubCode', unique=True),
+        Index('clubCode_9', 'clubCode', unique=True),
+        Index('marketId', 'marketId')
+    )
+
+    id: Mapped[int] = mapped_column(INTEGER(11), primary_key=True, autoincrement=True)
+    createdAt: Mapped[datetime.datetime] = mapped_column(DateTime, nullable=False)
+    updatedAt: Mapped[datetime.datetime] = mapped_column(DateTime, nullable=False)
+    name: Mapped[Optional[str]] = mapped_column(String(255))
+    userName: Mapped[Optional[str]] = mapped_column(String(255))
+    marketId: Mapped[Optional[int]] = mapped_column(INTEGER(11))
+    image: Mapped[Optional[str]] = mapped_column(Text)
+    profile: Mapped[Optional[str]] = mapped_column(Text)
+    location: Mapped[Optional[str]] = mapped_column(Text)
+    description: Mapped[Optional[str]] = mapped_column(Text)
+    status: Mapped[Optional[int]] = mapped_column(TINYINT(1), server_default=text('1'))
+    year: Mapped[Optional[str]] = mapped_column(String(255))
+    returnRate: Mapped[Optional[float]] = mapped_column(Float)
+    rate: Mapped[Optional[float]] = mapped_column(Float)
+    supplierType: Mapped[Optional[str]] = mapped_column(String(255))
+    medal: Mapped[Optional[str]] = mapped_column(String(255))
+    cityId: Mapped[Optional[int]] = mapped_column(INTEGER(11))
+    clubCode: Mapped[Optional[str]] = mapped_column(String(32), comment='Public club/serial code from client (e.g. 001); unique when set.')
 
 
 class Bales(Base):
