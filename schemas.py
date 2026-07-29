@@ -79,4 +79,7 @@ class RevenueComparisonResponse(BaseModel):
     period1: PeriodRevenue
     period2: PeriodRevenue
     difference: float
-    percent_change: Optional[float]
+    percent_change: Optional[float]@app.get("/health/redis")
+def check_redis():
+    redis_client.ping()
+    return {"status": "connected"}

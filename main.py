@@ -6,6 +6,7 @@ from io import BytesIO
 import json 
 from models import Orders, Products, Suppliers, Bales, RawImports
 import re
+from redis_client import redis_client
 from collections import defaultdict
 from datetime import date
 from schemas import (
@@ -40,6 +41,8 @@ def get_db():
     finally:
         db.close()
 
+
+
 KNOWN_TABLES = {
     "orders": Orders,
     "products": Products,
@@ -53,6 +56,10 @@ app = FastAPI()
 def check_db(db: Session = Depends(get_db)):
     return {"status": "connected"}
 
+@app.get("/health/redis")
+def check_redis():
+    redis_client.ping()
+    return {"status": "connected"}
 
 @app.post("/uploadfile/" )
 async def upload_file(file: UploadFile = File(...), db: Session = Depends(get_db)):
