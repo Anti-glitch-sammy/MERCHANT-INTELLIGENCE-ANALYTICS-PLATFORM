@@ -248,3 +248,12 @@ class Bales(Base):
     prices: Mapped[Optional[str]] = mapped_column(LONGTEXT, comment='JSON array of { price, min, max } tiers by slot index (stringify on save; parse on read).')
 
     products: Mapped['Products'] = relationship('Products', back_populates='bales')
+
+
+class RawImports(Base):
+    __tablename__ = 'raw_imports'
+
+    id: Mapped[int] = mapped_column(INTEGER(11), primary_key=True, autoincrement=True)
+    source_filename: Mapped[str] = mapped_column(String(255), nullable=False)
+    uploaded_at: Mapped[datetime.datetime] = mapped_column(TIMESTAMP, nullable=False, server_default=text('current_timestamp()'))
+    row_data: Mapped[str] = mapped_column(LONGTEXT, nullable=False)
